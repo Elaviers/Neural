@@ -1,0 +1,3 @@
+ttf
+rendersize 32
+filename consola.ttf
