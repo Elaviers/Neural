@@ -31,7 +31,7 @@ private:
 
 public:
 	UIConnection(UIElement* parent) : UIElement(parent), _centreHover(0.f), _lineWidth(3.f), _size(64.f), _weight(1.f), 
-		_lineColour(Colour::Grey), _lineColourHover(Colour::White), _centreColour(Colour::Grey, Colour::Black), _centreColourHover(Colour::White, Colour::Grey),
+		_lineColour(Colour::Grey), _lineColourHover(Colour::White), _centreColour(Colour::Black, Colour::Grey), _centreColourHover(Colour::Grey, Colour::White),
 		_fontColour(Colour::White) { SetZ(1.f); }
 	~UIConnection() {}
 
@@ -66,9 +66,9 @@ public:
 	
 	virtual void Render(RenderQueue&) const override;
 	
-	virtual bool OnKeyUp(EKeycode) override;
-	virtual bool OnKeyDown(EKeycode) override;
-	virtual bool OnMouseMove(float x, float y, bool blocked) override;
+	virtual bool OnKeyUp(bool blocked, EKeycode) override;
+	virtual bool OnKeyDown(bool blocked, EKeycode) override;
+	virtual bool OnMouseMove(bool blocked, float x, float y) override;
 
 	virtual void OnHoverStart() override;
 	virtual void OnHoverStop() override;

@@ -3,9 +3,9 @@
 
 UINode::UINode(UIElement* parent) : 
 	UIPanel(parent), 
-	_colourDefault(UIColour(Colour::Grey, Colour::Blue)), 
-	_colourEdgeHover(UIColour(Colour::White, Colour::Blue)),
-	_colourHover(UIColour(Colour::White, Colour((byte)50, 50, 255)))
+	_colourDefault(UIColour(Colour::Blue, Colour::Grey)),
+	_colourEdgeHover(UIColour(Colour::Blue, Colour::White)),
+	_colourHover(UIColour(Colour((byte)50, 50, 255), Colour::White))
 {
 	SetBorderSize(0.f);
 	SetColour(_colourDefault);
@@ -28,7 +28,7 @@ void UINode::Render(RenderQueue& queue) const
 	{
 		String string = String::FromFloat(perceptron->GetBias()).GetData();
 
-		RenderEntry& e = queue.NewDynamicEntry(ERenderChannels::UNLIT);
+		RenderEntry& e = queue.CreateEntry(ERenderChannels::UNLIT);
 		e.AddSetColour(Colour::White);
 		_font->RenderString(
 			e,
@@ -42,19 +42,51 @@ void UINode::Render(RenderQueue& queue) const
 	}
 }
 
-bool UINode::OnKeyUp(EKeycode key)
+bool UINode::OnKeyUp(bool blocked, EKeycode key)
 {
-	if (_hover && key == EKeycode::MOUSE_RIGHT)
+	if (key == EKeycode::MOUSE_LEFT)
 	{
-		_onDeleteRequest(*this);
-		return true;
+		_dragging = false;
+	
+		if (_hover)
+		{
+			_onHoverMouseUp(*this);
+			return true;
+		}
+	}
+
+	if (_hover)
+	{
+		if (key == EKeycode::MOUSE_RIGHT)
+		{
+			_onDeleteRequest(*this);
+			return true;
+		}
 	}
 
 	return false;
 }
 
-bool UINode::OnKeyDown(EKeycode key)
+bool UINode::OnKeyDown(bool blocked, EKeycode key)
 {
+	if (key == EKeycode::MOUSE_LEFT)
+	{
+		if (_hover)
+		{
+			if (_edgeHover)
+			{
+				_onEdgeMouseDown.TryCall(*this);
+			}
+			else
+			{
+				_dragging = true;
+			}
+
+			return true;
+		}
+		return false;
+	}
+
 	if (_hover)
 	{
 		switch (key)
@@ -76,39 +108,7 @@ bool UINode::OnKeyDown(EKeycode key)
 	return false;
 }
 
-bool UINode::OnMouseUp()
-{
-	_dragging = false;
-
-	if (_hover)
-	{
-		_onHoverMouseUp(*this);
-		return true;
-	}
-
-	return false;
-}
-
-bool UINode::OnMouseDown()
-{
-	if (_hover)
-	{
-		if (_edgeHover)
-		{
-			_onEdgeMouseDown.TryCall(*this);
-		}
-		else
-		{
-			_dragging = true;
-		}
-
-		return true;
-	}
-
-	return false;
-}
-
-bool UINode::OnMouseMove(float mouseX, float mouseY, bool blocked)
+bool UINode::OnMouseMove(bool blocked, float mouseX, float mouseY)
 {
 	if (blocked)
 	{

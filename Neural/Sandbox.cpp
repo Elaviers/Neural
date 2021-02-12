@@ -113,12 +113,13 @@ void Sandbox::_Frame()
 
 void Sandbox::_Render()
 {
-	_uiQueue.ClearDynamicQueue();
-	RenderEntry& e = _uiQueue.NewDynamicEntry(ERenderChannels::UNLIT, -1);
+	_uiQueue.Clear();
+	
+	RenderEntry& e = _uiQueue.CreateEntry(ERenderChannels::UNLIT, -1);
 	e.AddSetTexture(RCMDSetTexture::Type::WHITE, 0);
 	e.AddSetColour(Colour(.125f, .125f, .125f));
 	e.AddSetLineWidth(2.f);
-	e.AddGrid(_camera.transform, _camera.projection, EDirection::FORWARD, 64.f, 0.f, 0.f, 9.f);
+	e.AddGrid(_camera.transform, _camera.projection, EAxis::Z, 64.f, 0.f, 0.f, 9.f);
 
 	if (_connection.start)
 	{
@@ -137,14 +138,14 @@ void Sandbox::_Render()
 	_unlit.Use();
 	_unlit.SetMatrix4(DefaultUniformVars::mat4Projection, _camera.projection.GetMatrix());
 	_unlit.SetMatrix4(DefaultUniformVars::mat4View, _camera.transform.GetInverseTransformationMatrix());
-	_uiQueue.Render(ERenderChannels::UNLIT, _meshManager, _textureManager);
+	_uiQueue.Render(ERenderChannels::UNLIT, &_meshManager, &_textureManager, 0);
 
 	_window.SwapBuffers();
 }
 
 void Sandbox::_MouseUp()
 {
-	_ui.OnMouseUp();
+	_ui.KeyUp(EKeycode::MOUSE_LEFT);
 	_connection.start.Clear(); //any connections will have been handled by the ui callbacks
 
 	_UpdateNet();
@@ -152,11 +153,11 @@ void Sandbox::_MouseUp()
 
 void Sandbox::_MouseDown()
 {
-	if (!_ui.OnMouseDown())
+	if (!_ui.KeyDown(EKeycode::MOUSE_LEFT))
 	{
 		UINode* node = _CreateNode(_mX, _mY);
 		node->OnMouseMove(_mX, _mY, false);
-		node->OnMouseDown();
+		node->KeyDown(EKeycode::MOUSE_LEFT);
 	}
 }
 
@@ -165,13 +166,12 @@ void Sandbox::_MouseMove(uint16 x, uint16 y)
 	_mX = x - _camera.projection.GetDimensions().x / 2.f;
 	_mY = _camera.projection.GetDimensions().y / 2.f - y;
 
-	_ui.OnMouseMove(_mX, _mY, false);
+	_ui.OnMouseMove(false, _mX, _mY);
 }
-
 
 void Sandbox::_KeyUp(EKeycode key)
 {
-	_ui.OnKeyUp(key);
+	_ui.KeyUp(key);
 
 	if (key == EKeycode::MOUSE_RIGHT)
 		_UpdateNet();
@@ -179,7 +179,7 @@ void Sandbox::_KeyUp(EKeycode key)
 
 void Sandbox::_KeyDown(EKeycode key)
 {
-	_ui.OnKeyDown(key);
+	_ui.KeyDown(key);
 
 	if (key == EKeycode::MOUSE_SCROLLDOWN || key == EKeycode::MOUSE_SCROLLUP)
 		_UpdateNet();
@@ -190,7 +190,7 @@ UINode* Sandbox::_CreateNode(float x, float y)
 	UINode* node = new UINode(&_ui);
 	node->SetMaterial(_uiNodeMatPtr);
 	node->SetFont(_uiFont);
-	node->SetBounds(UICoord(0.f, x - 64.f), UICoord(0.f, y - 64.f), UICoord(0.f, 128.f), UICoord(0.f, 128.f));
+	node->SetBounds(UIBounds(UICoord(0.f, x - 64.f), UICoord(0.f, y - 64.f), UICoord(0.f, 128.f), UICoord(0.f, 128.f)));
 	node->SetOnEdgeMouseDown(FunctionPointer(this, &Sandbox::_StartConnection));
 	node->SetOnHoverMouseUp(FunctionPointer(this, &Sandbox::_EndConnection));
 	node->SetOnDeleteRequest(FunctionPointer(this, &Sandbox::_DeleteNode));
@@ -295,7 +295,7 @@ void Sandbox::_UpdateNet()
 		if (node)
 		{
 			bool state = node->perceptron->Evaluate();
-			node->SetColourDefault(state ? UIColour(Colour::Grey, Colour::Green) : UIColour(Colour::Grey, Colour::Red));
+			node->SetColourDefault(state ? UIColour(Colour::Green, Colour::Grey) : UIColour(Colour::Red, Colour::Grey));
 		}
 	}
 }

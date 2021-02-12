@@ -45,12 +45,9 @@ public:
 
 	virtual void Render(RenderQueue&) const override;
 
-	virtual bool OnKeyUp(EKeycode key) override;
-	virtual bool OnKeyDown(EKeycode key) override;
-
-	virtual bool OnMouseUp() override;
-	virtual bool OnMouseDown() override;
-	virtual bool OnMouseMove(float mouseX, float mouseY, bool blocked);
+	virtual bool OnKeyUp(bool blocked, EKeycode) override;
+	virtual bool OnKeyDown(bool blocked, EKeycode) override;
+	virtual bool OnMouseMove(bool blocked, float mouseX, float mouseY) override;
 
 	virtual void OnHoverStart() override;
 	virtual void OnHoverStop() override;

@@ -1,8 +1,9 @@
 #include <ELSys/Entry.hpp>
+#include "Console.hpp"
 #include "Sandbox.hpp"
 
 int Main()
 {
-	Sandbox sandbox;
-	return sandbox.Run();
+	Console console;
+	return console.Run();
 }

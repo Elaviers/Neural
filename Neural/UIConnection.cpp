@@ -71,7 +71,7 @@ void UIConnection::Render(RenderQueue& queue) const
 		float dist = axis.Length();
 		axis /= dist;
 
-		float angle = Maths::ArcTangentDegrees2(-axis.y, axis.x);
+		float angle = Maths::RadiansToDegrees(Maths::ArcTan2(-axis.y, axis.x));
 
 		if (angle > 90.f)
 			angle -= 180.f;
@@ -80,7 +80,7 @@ void UIConnection::Render(RenderQueue& queue) const
 
 		Transform t = Transform(Vector3(centre.x, centre.y, 0.f), Vector3(0.f, 0.f, angle), Vector3(dist, _lineWidth, 1.f));
 
-		RenderEntry& e = queue.NewDynamicEntry(ERenderChannels::UNLIT, -1);
+		RenderEntry& e = queue.CreateEntry(ERenderChannels::UNLIT, -1);
 		e.AddSetTexture(RCMDSetTexture::Type::WHITE, 0);
 		e.AddSetColour(_hover ? _lineColourHover : _lineColour);
 		e.AddSetTransform(t.GetTransformationMatrix());
@@ -104,7 +104,7 @@ void UIConnection::Render(RenderQueue& queue) const
 	}
 }
 
-bool UIConnection::OnKeyUp(EKeycode key)
+bool UIConnection::OnKeyUp(bool blocked, EKeycode key)
 {
 	if (_centreHover && key == EKeycode::MOUSE_RIGHT)
 	{
@@ -115,7 +115,7 @@ bool UIConnection::OnKeyUp(EKeycode key)
 	return false;
 }
 
-bool UIConnection::OnKeyDown(EKeycode key)
+bool UIConnection::OnKeyDown(bool blocked, EKeycode key)
 {
 	if (_centreHover)
 	{
@@ -134,7 +134,7 @@ bool UIConnection::OnKeyDown(EKeycode key)
 	return false;
 }
 
-bool UIConnection::OnMouseMove(float mouseX, float mouseY, bool blocked)
+bool UIConnection::OnMouseMove(bool blocked, float mouseX, float mouseY)
 {
 	if (blocked)
 	{

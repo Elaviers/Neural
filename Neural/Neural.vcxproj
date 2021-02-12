@@ -72,23 +72,27 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)ELLib\Headers\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)ELLib\;$(SolutionDir)ELLib\Include\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)ELLib\Build\$(Configuration)\$(Platform)\;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)Build\$(Configuration)-$(Platform)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)ELLib\Headers\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)ELLib\;$(SolutionDir)ELLib\Include\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)ELLib\Build\$(Configuration)\$(Platform)\;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)Build\$(Configuration)-$(Platform)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)ELLib\Headers\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)ELLib\;$(SolutionDir)ELLib\Include\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)ELLib\Build\$(Configuration)\$(Platform)\;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)Build\$(Configuration)-$(Platform)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)ELLib\Headers\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)ELLib\;$(SolutionDir)ELLib\Include\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)ELLib\Build\$(Configuration)\$(Platform)\;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)Build\$(Configuration)-$(Platform)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -155,25 +159,59 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Console.cpp" />
+    <ClCompile Include="ImagesIDX3.cpp" />
+    <ClCompile Include="LabelsIDX1.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Digits.cpp" />
+    <ClCompile Include="NetNeuron.cpp" />
     <ClCompile Include="NetPerceptron.cpp" />
-    <ClCompile Include="Neuron.cpp" />
-    <ClCompile Include="Perceptron.cpp" />
     <ClCompile Include="Sandbox.cpp" />
+    <ClCompile Include="LayeredNetwork.cpp" />
     <ClCompile Include="UIConnection.cpp" />
     <ClCompile Include="UINode.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Console.hpp" />
+    <ClInclude Include="Digits.hpp" />
+    <ClInclude Include="ImagesIDX3.hpp" />
+    <ClInclude Include="LabelsIDX1.hpp" />
+    <ClInclude Include="NetNeuron.hpp" />
     <ClInclude Include="NetPerceptron.hpp" />
-    <ClInclude Include="Neuron.hpp" />
-    <ClInclude Include="Perceptron.hpp" />
     <ClInclude Include="Sandbox.hpp" />
+    <ClInclude Include="LayeredNetwork.hpp" />
     <ClInclude Include="UIConnection.hpp" />
     <ClInclude Include="UINode.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Data\Shaders\Unlit.frag" />
-    <None Include="..\Data\Shaders\Unlit.vert" />
+    <None Include="Data\Shaders\Unlit.frag" />
+    <None Include="Data\Shaders\Unlit.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ELLib\ELAudio\ELAudio.vcxproj">
+      <Project>{6f48062a-bf0c-4e71-a219-7fb2130aac1b}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\ELLib\ELCore\ELCore.vcxproj">
+      <Project>{90d23395-1a5c-48ae-b2aa-318fa6140cc7}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\ELLib\ELGraphics\ELGraphics.vcxproj">
+      <Project>{b31b40c4-7526-4b52-96d6-7f758af87641}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\ELLib\ELMaths\ELMaths.vcxproj">
+      <Project>{4a3a2fe0-b739-4091-8ee4-2c7737cb5ccf}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\ELLib\ELNet\ELNet.vcxproj">
+      <Project>{3343f2de-86ef-486b-9174-ae100a8a8c86}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\ELLib\ELPhys\ELPhys.vcxproj">
+      <Project>{f809e675-1b19-4c94-92ed-d923c2b9a09e}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\ELLib\ELSys\ELSys.vcxproj">
+      <Project>{94421f68-e77e-4213-bd49-7624bc9eacf2}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\ELLib\ELUI\ELUI.vcxproj">
+      <Project>{f2b520d1-b1e0-4148-a0e4-db8e8923533e}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
